@@ -1,53 +1,75 @@
-// No es posible crear objetos antes de declarar la clase
-// let persona2 = new Persona('Diana', 'Romero', 'Diana@romeroz', 17, 'es');
+class Persona{
 
-class Persona {
-    constructor(nombre, apellido, email, edad, idioma) {
-        this._nombre = nombre;
+    static contadorObjetosPersona = 0;
+
+    constructor(nombre, apellido){
+        this._nombre = nombre; 
         this._apellido = apellido;
+        Persona.contadorObjetosPersona++;
+        console.log('Se incrementa el contador ' + Persona.contadorObjetosPersona);
     }
-
-    get nombre() {
+    get nombre(){
         return this._nombre;
     }
-
-    get apellido() {
-        return this._apellido;
-    }
-
-    set nombre(nombre) {
+    set nombre(nombre){
         this._nombre = nombre;
     }
-
-    set apellido(apellido) {
+    get apellido(){
+        return this._apellido;
+    }
+    set apellido(apellido){
         this._apellido = apellido;
     }
-    nombreCompleto() {
+    nombreCompleto(){
         return this._nombre + ' ' + this._apellido;
+    }
+    //Sobreescribiendo el metodo de la clase Padre (Object)
+    toString(){
+        //Se aplica poliformismo (multiples formas en tiempo de ejecucion)
+        //el metodo que se ejecuta depende si es una referencia de tipo padre 
+        //o de tipo hijo
+        return this.nombreCompleto();
+    }
+    static saludar(){
+        console.log('saludos desde método static');
+    }
+    static saludar2(persona){
+        console.log(persona.nombre + ' ' + persona.apellido);
     }
 }
 
-class Empleado extends Persona {
-    constructor(nombre, apellido, departamento) {
-        super(nombre , apellido);
+class Empleado extends Persona{
+    constructor(nombre, apellido, departamento){
+        super(nombre, apellido);//llamar al constructor de la clase padre
         this._departamento = departamento;
     }
-
-    get departamento() {
+    get departamento(){
         return this._departamento;
     }
-    set departamento(departamento) {
+    set departamento(departamento){
         this._departamento = departamento;
     }
-    nombreCompleto() {
+    //Sobreescritura
+    nombreCompleto(){
         return super.nombreCompleto() + ', ' + this._departamento;
     }
 }
 
+let persona1 = new Persona('Juan', 'Perez');
+console.log( persona1.toString() );
 
-let persona = new Persona('Dilan', 'Lopez');
-console.log(persona)
+let empleado1 = new Empleado('Maria', 'Jimenez', 'Sistemas');
+console.log( empleado1 );
+console.log( empleado1.nombreCompleto() );
+console.log( empleado1.toString());
 
-let empleado1 = new Empleado('Diana', 'Romero', 'Educacion infantil');
-console.log(empleado1)
-console.log(empleado1.nombreCompleto())
+//persona1.saludar(); no es posible llamar un método static desde un objeto
+Persona.saludar();
+Persona.saludar2(persona1);
+
+Empleado.saludar();
+Empleado.saludar2(empleado1);
+
+console.log(persona1.contadorObjetosPersona);
+console.log(Persona.contadorObjetosPersona);
+console.log(Empleado.contadorObjetosPersona);
